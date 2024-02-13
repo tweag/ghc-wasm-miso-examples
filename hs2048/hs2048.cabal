@@ -1,0 +1,26 @@
+name:                hs2048
+version:             0.1.0.0
+synopsis:            An implementation of 2048 using Haskell and Miso
+category:            Web
+build-type:          Simple
+cabal-version:       >=1.10
+license:             BSD3
+license-file:        LICENSE
+
+library
+  hs-source-dirs:      src
+  main-is:             Main.hs
+  build-depends:       base,
+                       miso,
+                       jsaddle,
+                       containers,
+                       aeson,
+                       aeson-pretty,
+                       random
+  default-language:    Haskell2010
+  other-modules:       GameModel
+                       InputModel
+                       Logic
+                       Rendering
+                       Touch
+  exposed-modules:     TwoZeroFourEight

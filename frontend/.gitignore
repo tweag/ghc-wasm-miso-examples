@@ -1,0 +1,4 @@
+node_modules/
+dist/
+ghc_wasm_jsffi.js
+.sass-cache/

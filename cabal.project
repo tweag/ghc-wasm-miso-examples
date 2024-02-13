@@ -1,0 +1,29 @@
+packages: . hs2048
+
+with-compiler: wasm32-wasi-ghc
+with-hc-pkg: wasm32-wasi-ghc-pkg
+
+-- https://github.com/haskellari/splitmix/pull/73
+source-repository-package
+  type: git
+  location: https://github.com/amesgen/splitmix
+  tag: 83b906c4bcdc2720546f1779a16eb65e8e12ecba
+
+-- remove TemplateHaskell
+source-repository-package
+  type: git
+  location: https://github.com/amesgen/miso
+  tag: bb9ce9a3dd03a7c1ac945943f65955ab10a53011
+
+source-repository-package
+  type: git
+  location: https://github.com/amesgen/jsaddle-wasm
+  tag: c4d0ac89dd696d6317ffab1046d1915556177316
+
+index-state:
+  , hackage.haskell.org 2024-02-13T17:27:31Z
+  -- head.hackage doesn't support index-state
+  -- https://gitlab.haskell.org/ghc/head.hackage/-/issues/53
+
+-- https://ghc.gitlab.haskell.org/head.hackage/
+import: ./head.hackage.project

@@ -1,0 +1,29 @@
+cabal-version:   3.0
+name:            ghc-wasm-async-pg
+version:         0
+
+executable ghc-wasm-async-pg
+    main-is: Main.hs
+    build-depends:
+      , aeson
+      , base
+      , containers
+      , hs2048
+      , jsaddle
+      , miso
+      , mtl
+      , random
+    hs-source-dirs: app
+    default-language: GHC2021
+    default-extensions: BlockArguments LambdaCase LexicalNegation OverloadedStrings RecordWildCards
+    ghc-options: -Wall -Wunused-packages -Wno-name-shadowing -Wredundant-constraints
+    other-modules:
+      App
+      SimpleCounter
+      Snake
+      TodoMVC
+    if os(wasi)
+      build-depends: jsaddle-wasm
+      ghc-options: -no-hs-main -optl-mexec-model=reactor "-optl-Wl,--export=hs_init,--export=hs_start"
+    else
+      build-depends: jsaddle-warp

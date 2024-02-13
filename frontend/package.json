@@ -1,0 +1,7 @@
+{
+  "name": "ghc-wasm-async-pg",
+  "version": "0.0.0",
+  "dependencies": {
+    "@bjorn3/browser_wasi_shim": "^0.2.19"
+  }
+}
