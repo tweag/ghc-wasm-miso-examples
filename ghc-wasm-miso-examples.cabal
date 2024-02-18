@@ -1,8 +1,8 @@
 cabal-version:   3.0
-name:            ghc-wasm-async-pg
+name:            ghc-wasm-miso-examples
 version:         0
 
-executable ghc-wasm-async-pg
+executable ghc-wasm-miso-examples
     main-is: Main.hs
     build-depends:
       , aeson
