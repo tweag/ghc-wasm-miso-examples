@@ -24,6 +24,6 @@ executable ghc-wasm-miso-examples
       TodoMVC
     if os(wasi)
       build-depends: jsaddle-wasm
-      ghc-options: -no-hs-main -optl-mexec-model=reactor "-optl-Wl,--export=hs_init,--export=hs_start"
+      ghc-options: -no-hs-main -optl-mexec-model=reactor "-optl-Wl,--export=hs_start"
     else
       build-depends: jsaddle-warp
