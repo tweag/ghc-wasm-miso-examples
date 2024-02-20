@@ -17,17 +17,13 @@ wasm32-wasi-cabal build ghc-wasm-miso-examples
 wasm32-wasi-cabal list-bin ghc-wasm-miso-examples
 hs_wasm_path=$(wasm32-wasi-cabal list-bin ghc-wasm-miso-examples)
 
+"$(wasm32-wasi-ghc --print-libdir)"/post-link.mjs \
+     --input "$hs_wasm_path" --output ghc_wasm_jsffi.js
+
 if $dev_mode; then
     cp "$hs_wasm_path" dist/bin.wasm
 else
-    wasm-opt "$@" "$hs_wasm_path" -o dist/bin.wasm
-fi
-
-node "$(wasm32-wasi-ghc --print-libdir)"/post-link.mjs \
-     --input dist/bin.wasm --output ghc_wasm_jsffi.js
-
-if ! $dev_mode; then
-    wasm-strip dist/bin.wasm
+    wasm-opt ${1+"$@"} "$hs_wasm_path" -o dist/bin.wasm
 fi
 
 function bundle() {
