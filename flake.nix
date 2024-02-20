@@ -11,12 +11,9 @@
       devShells.default = pkgs.mkShell {
         packages = [
           inputs.ghc-wasm-meta.packages.${system}.all_gmp
-          pkgs.nodejs_21
           pkgs.npm-check-updates
           pkgs.dart-sass
           pkgs.esbuild
-          pkgs.binaryen
-          pkgs.wabt
           pkgs.zlib
         ];
       };
