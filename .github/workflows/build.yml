@@ -1,0 +1,31 @@
+name: build
+
+on:
+  merge_group:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: install-nix
+        uses: DeterminateSystems/nix-installer-action@v9
+
+      - name: build-frontend
+        run: |
+          nix develop --command bash -c "cd frontend && npm install && wasm32-wasi-cabal update && exec ./build.sh --debuginfo --low-memory-unused --converge --gufa --flatten --rereloop -Oz"
+
+      - name: upload-artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: frontend/dist
