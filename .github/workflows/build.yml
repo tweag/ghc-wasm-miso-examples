@@ -12,6 +12,9 @@ jobs:
   build:
     name: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     steps:
 
       - name: checkout
@@ -24,8 +27,11 @@ jobs:
         run: |
           nix develop --command bash -c "cd frontend && npm install && wasm32-wasi-cabal update && exec ./build.sh --debuginfo --low-memory-unused --converge --gufa --flatten --rereloop -Oz"
 
-      - name: upload-artifact
-        uses: actions/upload-artifact@v4
+      - name: upload-pages-artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: dist
           path: frontend/dist
+          retention-days: 90
+
+      - name: deploy-pages
+        uses: actions/deploy-pages@v4
