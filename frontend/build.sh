@@ -24,6 +24,7 @@ if $dev_mode; then
     cp "$hs_wasm_path" dist/bin.wasm
 else
     wasm-opt ${1+"$@"} "$hs_wasm_path" -o dist/bin.wasm
+    wasm-strip --keep-section=name dist/bin.wasm
 fi
 
 function bundle() {
