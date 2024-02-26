@@ -1,7 +1,0 @@
-{
-  "name": "ghc-wasm-miso-examples",
-  "version": "0.0.0",
-  "dependencies": {
-    "@bjorn3/browser_wasi_shim": "^0.2.19"
-  }
-}

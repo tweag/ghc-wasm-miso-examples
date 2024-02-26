@@ -27,14 +27,7 @@ else
     wasm-strip --keep-section=name dist/bin.wasm
 fi
 
-function bundle() {
-    esbuild index.js --bundle --platform=browser --format=esm --outfile=dist/index.js "$@"
-}
-if $dev_mode; then
-    bundle
-else
-    bundle --minify
-fi
+cp ./*.js dist
 
 # for TodoMVC (from https://todo-mvc.haskell-miso.org):
 cp -r todomvc/ dist/

@@ -39,7 +39,6 @@ dependencies are met:
   not present in `ghc-9.6`/`ghc-9.8`)
 - `node` (at least `v21.2.0`)
 - `npm`
-- `esbuild`
 - `sass`
 
 ## Acknowledgements
