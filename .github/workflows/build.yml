@@ -25,7 +25,7 @@ jobs:
 
       - name: build-frontend
         run: |
-          nix develop --command bash -c "cd frontend && npm install && wasm32-wasi-cabal update && exec ./build.sh --debuginfo --low-memory-unused --converge --gufa --flatten --rereloop -Oz"
+          nix develop --command bash -c "cd frontend && wasm32-wasi-cabal update && exec ./build.sh --debuginfo --low-memory-unused --converge --gufa --flatten --rereloop -Oz"
 
       - name: upload-pages-artifact
         uses: actions/upload-pages-artifact@v3

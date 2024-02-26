@@ -1,4 +1,4 @@
-import { WASI, OpenFile, File, ConsoleStdout } from "@bjorn3/browser_wasi_shim";
+import { WASI, OpenFile, File, ConsoleStdout } from "https://cdn.jsdelivr.net/npm/@bjorn3/browser_wasi_shim@0.2.19/dist/index.js";
 import ghc_wasm_jsffi from "./ghc_wasm_jsffi.js";
 
 const args = [];
