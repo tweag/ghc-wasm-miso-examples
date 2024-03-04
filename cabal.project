@@ -16,7 +16,7 @@ if os(wasi)
   source-repository-package
     type: git
     location: https://github.com/amesgen/jsaddle-wasm
-    tag: c4d0ac89dd696d6317ffab1046d1915556177316
+    tag: 55fe9d52f2f4164042d180eca80d098abed67042
 
   -- https://ghc.gitlab.haskell.org/head.hackage/cabal.constraints
   import: ./head.hackage.project
