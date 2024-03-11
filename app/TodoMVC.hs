@@ -10,7 +10,6 @@
 {-# LANGUAGE MultiParamTypeClasses      #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE ExtendedDefaultRules       #-}
-{-# LANGUAGE CPP                        #-}
 
 -- from https://github.com/dmjio/miso/blob/master/examples/todo-mvc/Main.hs
 
