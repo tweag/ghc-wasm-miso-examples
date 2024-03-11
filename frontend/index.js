@@ -2,10 +2,7 @@ import { WASI, OpenFile, File, ConsoleStdout } from "https://cdn.jsdelivr.net/np
 import ghc_wasm_jsffi from "./ghc_wasm_jsffi.js";
 
 const args = [];
-const env = [
-  `EXAMPLE=${globalThis.example}`,
-  // `GHCRTS=-S`,
-];
+const env = [];
 const fds = [
   new OpenFile(new File([])), // stdin
   ConsoleStdout.lineBuffered((msg) => console.log(`[WASI stdout] ${msg}`)),
@@ -22,4 +19,4 @@ const { instance } = await WebAssembly.instantiateStreaming(fetch("bin.wasm"), {
 Object.assign(instance_exports, instance.exports);
 
 wasi.initialize(instance);
-await instance.exports.hs_start();
+await instance.exports.hs_start(globalThis.example);
