@@ -23,8 +23,9 @@ hs_wasm_path=$(wasm32-wasi-cabal list-bin ghc-wasm-miso-examples)
 if $dev_mode; then
     cp "$hs_wasm_path" dist/bin.wasm
 else
-    wasm-opt ${1+"$@"} "$hs_wasm_path" -o dist/bin.wasm
-    wasm-strip --keep-section=name dist/bin.wasm
+    wizer --allow-wasi --wasm-bulk-memory true --init-func _initialize -o dist/bin.wasm "$hs_wasm_path"
+    wasm-opt ${1+"$@"} dist/bin.wasm -o dist/bin.wasm
+    wasm-tools strip -o dist/bin.wasm dist/bin.wasm
 fi
 
 cp ./*.js dist
