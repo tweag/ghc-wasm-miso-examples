@@ -14,8 +14,7 @@ mkdir dist
 cp ./*.html dist/
 
 wasm32-wasi-cabal build ghc-wasm-miso-examples
-wasm32-wasi-cabal list-bin ghc-wasm-miso-examples
-hs_wasm_path=$(wasm32-wasi-cabal list-bin ghc-wasm-miso-examples)
+hs_wasm_path=$(find .. -name "*.wasm")
 
 "$(wasm32-wasi-ghc --print-libdir)"/post-link.mjs \
      --input "$hs_wasm_path" --output ghc_wasm_jsffi.js
