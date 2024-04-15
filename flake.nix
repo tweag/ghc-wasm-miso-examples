@@ -9,9 +9,7 @@
       devShells.default = pkgs.mkShell {
         packages = [
           inputs.ghc-wasm-meta.packages.${system}.all_gmp
-          pkgs.npm-check-updates
           pkgs.dart-sass
-          pkgs.zlib
         ];
       };
     });
