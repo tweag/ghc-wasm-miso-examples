@@ -1,8 +1,8 @@
 packages: . hs2048
 
-index-state: 2024-04-09T09:10:13Z
+index-state: 2024-04-15T08:03:57Z
 
-if os(wasi)
+if arch(wasm32)
   -- https://github.com/haskellari/splitmix/pull/73
   source-repository-package
     type: git
@@ -23,23 +23,15 @@ if os(wasi)
 if impl(ghc >= 9.10)
   allow-newer:
     , base
+    , deepseq
     , ghc-prim
     , template-haskell
 
-  source-repository-package
-    type: git
-    location: https://github.com/haskell-hvr/text-short
-    tag: 9c4c133afc0b0d284e9c61477dcb9a20862f49f8
+  packages: https://ghc.gitlab.haskell.org/head.hackage/package/text-short-0.1.5.tar.gz
 
-  source-repository-package
-    type: git
-    location: https://github.com/amesgen/free
-    tag: b5528b004b1b3a62989647ec2ef9a312e33739d0
+  packages: https://ghc.gitlab.haskell.org/head.hackage/package/free-5.2.tar.gz
 
   package reflection
     flags: -template-haskell
 
-  source-repository-package
-    type: git
-    location: https://github.com/amesgen/lens
-    tag: 3be3dae69175d3e417da40afa148232da71deba7
+  packages: https://ghc.gitlab.haskell.org/head.hackage/package/lens-5.2.3.tar.gz
