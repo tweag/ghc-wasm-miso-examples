@@ -1,6 +1,6 @@
 packages: . hs2048
 
-index-state: 2024-04-15T08:03:57Z
+index-state: 2024-04-20T23:09:54Z
 
 if arch(wasm32)
   -- https://github.com/haskellari/splitmix/pull/73
