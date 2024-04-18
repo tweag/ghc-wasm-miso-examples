@@ -19,25 +19,34 @@ under the hood.
 
 ## Building
 
+### With nix
+
 Within the `nix develop` shell:
 
 ```sh
 cd frontend
 wasm32-wasi-cabal update
-./build.sh -Oz
+./build.sh
 ```
 
-The artifacts will be available in `frontend/dist`. The arguments
-passed to `build.sh` are redirected to `wasm-opt`, if omitted, a dev
-build without `wasm-opt` will be performed.
+If you pass additional arguments to `build.sh`, they will be
+redirected to `wasm-opt`, otherwise a dev build without `wasm-opt`
+will be performed.
 
-They can also be built without nix, as long as the following
-dependencies are met:
+The artifacts will be available in `frontend/dist`.
 
-- `wasm32-wasi-ghc`/`wasm32-wasi-cabal` (use ghc-head or at least
-  `ghc-9.10` branch, JSFFI is not present in `ghc-9.6`/`ghc-9.8`)
-- `node` (at least `v21.2.0`)
-- `sass`
+### Without nix
+
+Follow instructions on
+[`ghc-wasm-meta`](https://gitlab.haskell.org/ghc/ghc-wasm-meta#getting-started-without-nix)
+to set up the toolchain, then:
+
+```sh
+source ~/.ghc-wasm/env
+npm install -g sass
+cd frontend
+./build.sh
+```
 
 ## Acknowledgements
 
