@@ -23,7 +23,6 @@ Within the `nix develop` shell:
 
 ```sh
 cd frontend
-npm install
 wasm32-wasi-cabal update
 ./build.sh -Oz
 ```
@@ -35,10 +34,9 @@ build without `wasm-opt` will be performed.
 They can also be built without nix, as long as the following
 dependencies are met:
 
-- `wasm32-wasi-ghc`/`wasm32-wasi-cabal` (use `ghc-9.10` branch, JSFFI is not
-  present in `ghc-9.6`/`ghc-9.8`)
+- `wasm32-wasi-ghc`/`wasm32-wasi-cabal` (use ghc-head or at least
+  `ghc-9.10` branch, JSFFI is not present in `ghc-9.6`/`ghc-9.8`)
 - `node` (at least `v21.2.0`)
-- `npm`
 - `sass`
 
 ## Acknowledgements
