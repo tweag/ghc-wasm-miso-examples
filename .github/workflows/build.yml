@@ -9,12 +9,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    name: build
+  nix-build:
+    name: nix-build
     runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
     steps:
 
       - name: checkout
@@ -26,6 +23,34 @@ jobs:
       - name: build-frontend
         run: |
           nix develop --command bash -c "cd frontend && wasm32-wasi-cabal update && exec ./build.sh --debuginfo --low-memory-unused --converge --gufa --flatten --rereloop -Oz"
+
+  non-nix-build:
+    name: non-nix-build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: ghc-wasm-meta
+        run: |
+          pushd "$(mktemp -d)"
+          curl -f -L --retry 5 https://gitlab.haskell.org/ghc/ghc-wasm-meta/-/archive/master/ghc-wasm-meta-master.tar.gz | tar xz --strip-components=1
+          ./setup.sh
+          ~/.ghc-wasm/add_to_github_path.sh
+          popd
+
+      - name: install-sass
+        run: |
+          npm install -g sass
+
+      - name: build-frontend
+        run: |
+          cd frontend
+          ./build.sh --debuginfo --low-memory-unused --converge --gufa --flatten --rereloop -Oz
 
       - name: upload-pages-artifact
         uses: actions/upload-pages-artifact@v3
