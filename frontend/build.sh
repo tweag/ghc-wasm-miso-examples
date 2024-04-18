@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
+
 set -e
+
+if [[ $PWD != */frontend ]]; then
+    echo "This script is meant to be run in the frontend directory"
+    exit 1
+fi
 
 if [ $# -eq 0 ]; then
     echo "Building for dev"
