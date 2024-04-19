@@ -19,7 +19,16 @@ rm -rf dist
 mkdir dist
 cp ./*.html dist/
 
-wasm32-wasi-cabal build ghc-wasm-miso-examples
+if command -v wasm32-wasi-cabal &>/dev/null; then
+    wasm32-wasi-cabal build ghc-wasm-miso-examples
+else
+    cabal \
+        --with-compiler=wasm32-wasi-ghc \
+        --with-hc-pkg=wasm32-wasi-ghc-pkg \
+        --with-hsc2hs=wasm32-wasi-hsc2hs \
+        build ghc-wasm-miso-examples
+fi
+
 hs_wasm_path=$(find .. -name "*.wasm")
 
 "$(wasm32-wasi-ghc --print-libdir)"/post-link.mjs \
