@@ -37,9 +37,15 @@ The artifacts will be available in `frontend/dist`.
 
 ### Without nix
 
-Follow instructions on
-[`ghc-wasm-meta`](https://gitlab.haskell.org/ghc/ghc-wasm-meta#getting-started-without-nix)
-to set up the toolchain, then:
+You can set up the toolchain by either:
+
+- Using
+  [`ghc-wasm-meta`](https://gitlab.haskell.org/ghc/ghc-wasm-meta#getting-started-without-nix)
+  directly to set up ghc head or ghc 9.10
+- Using [`ghcup`](https://www.haskell.org/ghcup/guide/#cross-support)
+  to set up ghc 9.10
+
+Then:
 
 ```sh
 source ~/.ghc-wasm/env
