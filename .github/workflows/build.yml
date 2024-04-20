@@ -24,6 +24,41 @@ jobs:
         run: |
           nix develop --command bash -c "cd frontend && wasm32-wasi-cabal update && exec ./build.sh --debuginfo --low-memory-unused --converge --gufa --flatten --rereloop -Oz"
 
+  ghcup-build:
+    name: ghcup-build
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: ghc-wasm-meta
+        run: |
+          pushd "$(mktemp -d)"
+          curl -f -L --retry 5 https://gitlab.haskell.org/ghc/ghc-wasm-meta/-/archive/master/ghc-wasm-meta-master.tar.gz | tar xz --strip-components=1
+          SKIP_GHC=1 ./setup.sh
+          ~/.ghc-wasm/add_to_github_path.sh
+          popd
+
+      - name: wasm32-wasi-ghc
+        run: |
+          ghcup config add-release-channel https://raw.githubusercontent.com/haskell/ghcup-metadata/develop/ghcup-cross-0.0.8.yaml
+          ghcup install ghc --set wasm32-wasi-9.10.0.20240412 -- $CONFIGURE_ARGS
+
+      - name: install-sass
+        run: |
+          npm install -g sass
+
+      - name: build-frontend
+        run: |
+          cd frontend
+          cabal \
+            --with-compiler=wasm32-wasi-ghc \
+            --with-hc-pkg=wasm32-wasi-ghc-pkg \
+            --with-hsc2hs=wasm32-wasi-hsc2hs \
+            update
+          ./build.sh --debuginfo --low-memory-unused --converge --gufa --flatten --rereloop -Oz
+
   non-nix-build:
     name: non-nix-build
     runs-on: ubuntu-latest
