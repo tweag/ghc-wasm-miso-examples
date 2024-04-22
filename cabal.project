@@ -20,6 +20,15 @@ if arch(wasm32)
     location: https://github.com/amesgen/jsaddle-wasm
     tag: be129c788f8ca1ea2e9cc1515397c1a46d02bb41
 
+package aeson
+  flags: -ordered-keymap
+
+package QuickCheck
+  flags: -templateHaskell
+
+package reflection
+  flags: -template-haskell
+
 if impl(ghc >= 9.10)
   allow-newer:
     , base
@@ -30,8 +39,5 @@ if impl(ghc >= 9.10)
   packages: https://ghc.gitlab.haskell.org/head.hackage/package/text-short-0.1.5.tar.gz
 
   packages: https://ghc.gitlab.haskell.org/head.hackage/package/free-5.2.tar.gz
-
-  package reflection
-    flags: -template-haskell
 
   packages: https://ghc.gitlab.haskell.org/head.hackage/package/lens-5.2.3.tar.gz
