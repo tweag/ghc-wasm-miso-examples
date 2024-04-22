@@ -32,12 +32,21 @@ package reflection
 if impl(ghc >= 9.10)
   allow-newer:
     , base
+    , bytestring
+    , containers
     , deepseq
+    , filepath
     , ghc-prim
     , template-haskell
+    , text
+    , time
+
+  constraints:
+    directory installed,
+    process installed,
+    time installed,
+    unix installed
 
   packages: https://ghc.gitlab.haskell.org/head.hackage/package/text-short-0.1.5.tar.gz
-
-  packages: https://ghc.gitlab.haskell.org/head.hackage/package/free-5.2.tar.gz
 
   packages: https://ghc.gitlab.haskell.org/head.hackage/package/lens-5.2.3.tar.gz
