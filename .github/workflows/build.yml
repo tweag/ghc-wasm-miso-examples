@@ -77,6 +77,8 @@ jobs:
           ./setup.sh
           ~/.ghc-wasm/add_to_github_path.sh
           popd
+        env:
+          FLAVOUR: '9.10'
 
       - name: install-sass
         run: |
