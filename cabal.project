@@ -1,13 +1,13 @@
 packages: . hs2048
 
-index-state: 2024-05-13T07:56:22Z
+index-state: 2024-06-28T13:56:18Z
 
 if arch(wasm32)
   -- https://github.com/haskellari/splitmix/pull/73
   source-repository-package
     type: git
     location: https://github.com/amesgen/splitmix
-    tag: 83b906c4bcdc2720546f1779a16eb65e8e12ecba
+    tag: 5f5b766d97dc735ac228215d240a3bb90bc2ff75
 
   -- remove TemplateHaskell
   source-repository-package
@@ -24,20 +24,4 @@ package aeson
   flags: -ordered-keymap
 
 if impl(ghc >= 9.10)
-  allow-newer:
-    , base
-    , bytestring
-    , containers
-    , deepseq
-    , filepath
-    , ghc-prim
-    , template-haskell
-    , text
-    , time
-    , jsaddle:lens
-
-  constraints:
-    directory installed,
-    process installed,
-    time installed,
-    unix installed
+  allow-newer: servant:base
