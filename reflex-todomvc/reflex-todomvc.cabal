@@ -1,0 +1,25 @@
+Cabal-version: 3.0
+Name: reflex-todomvc
+Version: 0.1
+Synopsis: Functional Reactive TodoMVC
+Description: An implementation of the TodoMVC specification using the Reflex-DOM functional reactive DOM library
+License: BSD-3-Clause
+License-file: LICENSE
+Author: Ryan Trinkle
+Maintainer: ryan.trinkle@gmail.com
+Stability: Experimental
+Category: FRP
+
+library
+  hs-source-dirs: src
+  build-depends:
+    base,
+    reflex,
+    ghcjs-dom == 0.9.*,
+    reflex-dom-core,
+    containers,
+    text,
+    mtl
+  exposed-modules:
+    Reflex.TodoMVC
+  ghc-options:  -Wall -fwarn-tabs -funbox-strict-fields -O2

@@ -15,6 +15,7 @@ executable ghc-wasm-miso-examples
       , miso
       , mtl
       , random
+      , reflex-todomvc
       , text
     hs-source-dirs: app
     default-language: GHC2021
