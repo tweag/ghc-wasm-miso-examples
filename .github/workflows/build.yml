@@ -43,7 +43,7 @@ jobs:
       - name: wasm32-wasi-ghc
         run: |
           ghcup config add-release-channel https://raw.githubusercontent.com/haskell/ghcup-metadata/develop/ghcup-cross-0.0.8.yaml
-          ghcup install ghc --set wasm32-wasi-9.10.0.20240412 -- $CONFIGURE_ARGS
+          ghcup install ghc --set wasm32-wasi-9.10.1 -- $CONFIGURE_ARGS
 
       - name: install-sass
         run: |
