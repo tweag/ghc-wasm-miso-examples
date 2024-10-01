@@ -143,7 +143,7 @@ stepSlide state =
 step :: GameState -> GameState
 step state@GameState {..} =
   if | gameProgress == Won || gameProgress == GameOver -> state
-     | gameWon grid -> win state
+     | gameWon grid, gameProgress /= Continuing -> win state
      | gameLost grid -> lose state
      | direction /= None -> stepSlide state
      | otherwise -> state
