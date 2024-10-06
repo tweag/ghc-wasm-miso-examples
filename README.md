@@ -1,5 +1,7 @@
 # `ghc-wasm-miso-examples`
 
+[![Chat on Matrix](https://matrix.to/img/matrix-badge.svg)](https://matrix.to/#/#haskell-wasm:matrix.terrorjack.com)
+
 The GHC wasm backend supports the
 [JSFFI](https://ghc.gitlab.haskell.org/ghc/doc/users_guide/wasm.html#javascript-ffi-in-the-wasm-backend)
 feature, allowing Haskell wasm apps to interop with JavaScript
