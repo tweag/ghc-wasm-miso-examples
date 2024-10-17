@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP                 #-}
 {-# LANGUAGE DataKinds           #-}
 {-# LANGUAGE DeriveGeneric       #-}
 {-# LANGUAGE RecordWildCards     #-}
@@ -9,13 +10,19 @@ module XHR (start) where
 
 -- slightly adapted from https://github.com/dmjio/miso/blob/master/examples/xhr/Main.hs
 
+#ifdef wasi_HOST_OS
+import GHC.Wasm.Prim
+#else
+import Data.JSString (JSString)
+import Language.Javascript.JSaddle (fromJSString, toJSString)
+#endif
+
 import           Control.Monad.IO.Class
 import           Data.Aeson
 import qualified Data.Map               as M
 import           Data.Maybe
 import qualified Data.Text              as T
 import           GHC.Generics
-import           GHC.Wasm.Prim
 
 import           Miso                   hiding (defaultOptions)
 import           Miso.String
@@ -135,14 +142,19 @@ instance FromJSON APIInfo where
 getGitHubAPIInfo :: JSM APIInfo
 getGitHubAPIInfo = do
   resp <- liftIO $
-    T.pack . fromJSString <$> js_fetch (toJSString "https://api.github.com")
+    T.pack . fromJSString <$> js_fetch (toJSString ("https://api.github.com" :: String))
   case eitherDecodeStrictText resp :: Either String APIInfo of
     Left s  -> error s
     Right j -> pure j
 
+#ifdef wasi_HOST_OS
 -- We use the WASM JS FFI here to access the more modern fetch API. If you want
 -- your code to eg also work when compiling with non-cross GHC and using
 -- jsaddle-warp, you can use fetch or XMLHttpRequest via JSaddle, for example
 -- via ghcjs-dom, servant-jsaddle or servant-client-js.
 foreign import javascript safe "const r = await fetch($1); return r.text();"
   js_fetch :: JSString -> IO JSString
+#else
+js_fetch :: JSString -> IO JSString
+js_fetch = error "not implemented"
+#endif
