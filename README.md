@@ -5,9 +5,8 @@ The GHC wasm backend supports the
 feature, allowing Haskell wasm apps to interop with JavaScript
 seamlessly in the browser. This repo contains a few examples to
 demonstrate this ability, all of which based on the
-[`miso`](https://haskell-miso.org) frontend framework, using an
-unofficial [port](https://github.com/amesgen/miso/tree/remove-th) as
-well as an experimental
+[`miso`](https://haskell-miso.org) frontend framework as well as
+an experimental
 [`jsaddle-wasm`](https://github.com/amesgen/jsaddle-wasm) library
 under the hood.
 
@@ -44,7 +43,8 @@ You can set up the toolchain by either:
   [`ghc-wasm-meta`](https://gitlab.haskell.org/ghc/ghc-wasm-meta#getting-started-without-nix)
   directly to set up ghc head or ghc 9.10
 - Using [`ghcup`](https://www.haskell.org/ghcup/guide/#cross-support)
-  to set up ghc 9.10
+  to set up ghc 9.10 (9.10.1.20241021 or later, with TemplateHaskell support)
+  and cabal >=3.15.
 
 Also install [Sass](https://sass-lang.com/install/).
 

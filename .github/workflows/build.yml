@@ -40,10 +40,15 @@ jobs:
           ~/.ghc-wasm/add_to_github_path.sh
           popd
 
+      - name: cabal
+        run: |
+          ghcup config add-release-channel https://raw.githubusercontent.com/haskell/ghcup-metadata/develop/ghcup-prereleases-0.0.8.yaml
+          ghcup install cabal --set 3.15.0.0.2024.10.3
+
       - name: wasm32-wasi-ghc
         run: |
           ghcup config add-release-channel https://raw.githubusercontent.com/haskell/ghcup-metadata/develop/ghcup-cross-0.0.8.yaml
-          ghcup install ghc --set wasm32-wasi-9.10.1 -- $CONFIGURE_ARGS
+          ghcup install ghc --set wasm32-wasi-9.10.1.20241021 -- $CONFIGURE_ARGS
 
       - uses: dw-labs-org/dart-sass-gha@v1
 
