@@ -45,9 +45,7 @@ jobs:
           ghcup config add-release-channel https://raw.githubusercontent.com/haskell/ghcup-metadata/develop/ghcup-cross-0.0.8.yaml
           ghcup install ghc --set wasm32-wasi-9.10.1 -- $CONFIGURE_ARGS
 
-      - name: install-sass
-        run: |
-          npm install -g sass
+      - uses: dw-labs-org/dart-sass-gha@v1
 
       - name: build-frontend
         run: |
@@ -80,9 +78,7 @@ jobs:
         env:
           FLAVOUR: '9.10'
 
-      - name: install-sass
-        run: |
-          npm install -g sass
+      - uses: dw-labs-org/dart-sass-gha@v1
 
       - name: build-frontend
         run: |

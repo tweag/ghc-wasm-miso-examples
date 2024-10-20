@@ -46,11 +46,12 @@ You can set up the toolchain by either:
 - Using [`ghcup`](https://www.haskell.org/ghcup/guide/#cross-support)
   to set up ghc 9.10
 
+Also install [Sass](https://sass-lang.com/install/).
+
 Then:
 
 ```sh
 source ~/.ghc-wasm/env
-npm install -g sass
 cd frontend
 ./build.sh
 ```
