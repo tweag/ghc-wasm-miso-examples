@@ -52,6 +52,12 @@ jobs:
 
       - uses: dw-labs-org/dart-sass-gha@v1
 
+      - name: install-happy
+        run: |
+          cabal path --installdir >> "$GITHUB_PATH"
+          cabal update -z
+          cabal install -z happy
+
       - name: build-frontend
         run: |
           cd frontend
@@ -84,6 +90,12 @@ jobs:
           FLAVOUR: '9.10'
 
       - uses: dw-labs-org/dart-sass-gha@v1
+
+      - name: install-happy
+        run: |
+          cabal path --installdir >> "$GITHUB_PATH"
+          cabal update -z
+          cabal install -z happy
 
       - name: build-frontend
         run: |
