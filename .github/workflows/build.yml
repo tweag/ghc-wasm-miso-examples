@@ -22,7 +22,7 @@ jobs:
 
       - name: build-frontend
         run: |
-          nix develop --command bash -c "cd frontend && wasm32-wasi-cabal update && exec ./build.sh --debuginfo --low-memory-unused --converge --gufa --flatten --rereloop -Oz"
+          nix develop --command bash -c "cd frontend && wasm32-wasi-cabal update && exec ./build.sh --low-memory-unused --converge --gufa --flatten --rereloop -Oz"
 
   ghcup-build:
     name: ghcup-build
@@ -60,7 +60,7 @@ jobs:
             --with-hc-pkg=wasm32-wasi-ghc-pkg \
             --with-hsc2hs=wasm32-wasi-hsc2hs \
             update
-          ./build.sh --debuginfo --low-memory-unused --converge --gufa --flatten --rereloop -Oz
+          ./build.sh --low-memory-unused --converge --gufa --flatten --rereloop -Oz
 
   non-nix-build:
     name: non-nix-build
@@ -88,7 +88,7 @@ jobs:
       - name: build-frontend
         run: |
           cd frontend
-          ./build.sh --debuginfo --low-memory-unused --converge --gufa --flatten --rereloop -Oz
+          ./build.sh --low-memory-unused --converge --gufa --flatten --rereloop -Oz
 
       - name: upload-pages-artifact
         uses: actions/upload-pages-artifact@v3
