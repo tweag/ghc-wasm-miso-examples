@@ -20,9 +20,23 @@ jobs:
       - name: install-nix
         uses: DeterminateSystems/nix-installer-action@v16
 
+      - name: gen-plan-json
+        id: gen-plan-json
+        run: |
+          nix develop --command bash -c 'cd frontend && wasm32-wasi-cabal update && wasm32-wasi-cabal build ghc-wasm-miso-examples --dry-run && echo WASM32_WASI_GHC=$(which wasm32-wasi-ghc) >> $GITHUB_OUTPUT'
+
+      - name: cabal-cache
+        uses: actions/cache@v4
+        with:
+          key: nix-${{ hashFiles('dist-newstyle/cache/plan.json') }}
+          restore-keys: nix-
+          path: |
+            ~/.ghc-wasm/.cabal/store
+            dist-newstyle
+
       - name: build-frontend
         run: |
-          nix develop --command bash -c "cd frontend && wasm32-wasi-cabal update && exec ./build.sh --low-memory-unused --converge --gufa --flatten --rereloop -Oz"
+          nix develop --command bash -c "cd frontend && exec ./build.sh --low-memory-unused --converge --gufa --flatten --rereloop -Oz"
 
   ghcup-build:
     name: ghcup-build
@@ -52,7 +66,7 @@ jobs:
 
       - uses: dw-labs-org/dart-sass-gha@v1
 
-      - name: build-frontend
+      - name: gen-plan-json
         run: |
           cd frontend
           cabal \
@@ -60,6 +74,24 @@ jobs:
             --with-hc-pkg=wasm32-wasi-ghc-pkg \
             --with-hsc2hs=wasm32-wasi-hsc2hs \
             update
+          cabal \
+            --with-compiler=wasm32-wasi-ghc \
+            --with-hc-pkg=wasm32-wasi-ghc-pkg \
+            --with-hsc2hs=wasm32-wasi-hsc2hs \
+            build ghc-wasm-miso-examples --dry-run
+
+      - name: cabal-cache
+        uses: actions/cache@v4
+        with:
+          key: ghcup-${{ hashFiles('dist-newstyle/cache/plan.json') }}
+          restore-keys: ghcup-
+          path: |
+            ~/.local/state/cabal/store
+            dist-newstyle
+
+      - name: build-frontend
+        run: |
+          cd frontend
           ./build.sh --low-memory-unused --converge --gufa --flatten --rereloop -Oz
 
   non-nix-build:
@@ -84,6 +116,20 @@ jobs:
           FLAVOUR: '9.10'
 
       - uses: dw-labs-org/dart-sass-gha@v1
+
+      - name: gen-plan-json
+        run: |
+          cd frontend
+          wasm32-wasi-cabal build ghc-wasm-miso-examples --dry-run
+
+      - name: cabal-cache
+        uses: actions/cache@v4
+        with:
+          key: vanilla-${{ hashFiles('dist-newstyle/cache/plan.json') }}
+          restore-keys: vanilla-
+          path: |
+            ~/.ghc-wasm/.cabal/store
+            dist-newstyle
 
       - name: build-frontend
         run: |
