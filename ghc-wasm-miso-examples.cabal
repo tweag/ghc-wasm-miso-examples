@@ -11,6 +11,7 @@ executable ghc-wasm-miso-examples
       , hs2048
       , jsaddle
       , miso
+      , miso >= 1.8.5.0
       , mtl
       , random
       , text

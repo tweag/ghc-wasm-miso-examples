@@ -1,6 +1,6 @@
 packages: . hs2048
 
-index-state: 2024-10-26T13:27:42Z
+index-state: 2024-11-25T21:40:33Z
 
 if arch(wasm32)
   -- Required for TemplateHaskell. When using wasm32-wasi-cabal from
