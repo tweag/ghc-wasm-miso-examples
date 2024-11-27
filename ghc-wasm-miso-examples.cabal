@@ -29,4 +29,4 @@ executable ghc-wasm-miso-examples
       build-depends: ghc-experimental, jsaddle-wasm
       ghc-options: -no-hs-main -optl-mexec-model=reactor "-optl-Wl,--export=hs_start"
     else
-      build-depends: jsaddle-warp, warp, websockets
+      build-depends: jsaddle-warp, wai-app-static, warp, websockets
