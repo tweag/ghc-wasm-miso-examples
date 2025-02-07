@@ -8,7 +8,7 @@
     {
       devShells.default = pkgs.mkShell {
         packages = [
-          inputs.ghc-wasm-meta.packages.${system}.all_9_10
+          inputs.ghc-wasm-meta.packages.${system}.all_9_12
           pkgs.dart-sass
         ];
       };
