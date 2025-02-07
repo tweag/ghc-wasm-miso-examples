@@ -2,6 +2,9 @@ packages: . hs2048
 
 index-state: 2025-02-07T08:16:42Z
 
+allow-newer:
+  all:base
+
 if arch(wasm32)
   -- Required for TemplateHaskell. When using wasm32-wasi-cabal from
   -- ghc-wasm-meta, this is superseded by the global cabal.config.
