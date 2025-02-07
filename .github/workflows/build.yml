@@ -11,7 +11,7 @@ on:
 jobs:
   nix-build:
     name: nix-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
 
       - name: checkout
@@ -40,7 +40,7 @@ jobs:
 
   ghcup-build:
     name: ghcup-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
 
       - name: checkout
@@ -95,7 +95,7 @@ jobs:
 
   non-nix-build:
     name: non-nix-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       pages: write
       id-token: write
