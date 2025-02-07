@@ -36,7 +36,7 @@ jobs:
 
       - name: build-frontend
         run: |
-          nix develop --command bash -c "cd frontend && exec ./build.sh --low-memory-unused --converge --gufa --flatten --rereloop -Oz"
+          nix develop --command bash -c "cd frontend && exec ./build.sh --low-memory-unused --converge -O4"
 
   ghcup-build:
     name: ghcup-build
@@ -91,7 +91,7 @@ jobs:
       - name: build-frontend
         run: |
           cd frontend
-          ./build.sh --low-memory-unused --converge --gufa --flatten --rereloop -Oz
+          ./build.sh --low-memory-unused --converge -O4
 
   non-nix-build:
     name: non-nix-build
@@ -133,7 +133,7 @@ jobs:
       - name: build-frontend
         run: |
           cd frontend
-          ./build.sh --low-memory-unused --converge --gufa --flatten --rereloop -Oz
+          ./build.sh --low-memory-unused --converge -O4
 
       - name: upload-pages-artifact
         uses: actions/upload-pages-artifact@v3
