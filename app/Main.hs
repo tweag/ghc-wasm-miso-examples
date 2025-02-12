@@ -42,7 +42,7 @@ main :: IO ()
 main =
     getArgs >>= \case
         -- Note that `debug` works with `cabal repl` but not `cabal run`.
-        -- The best workflow is to run `ghcid -c "cabal repl ghc-wasm-miso-examples" -W -T ':main primer'`.
+        -- The best workflow is to run `ghcid -c "cabal repl ghc-wasm-miso-examples" -W -T ':main simplecounter'`.
         [arg] ->
             let app =
                     start
