@@ -26,4 +26,4 @@ executable ghc-wasm-miso-examples
       Snake
       TodoMVC
       XHR
-    ghc-options: -no-hs-main -optl-mexec-model=reactor "-optl-Wl,--export=hs_start"
+    ghc-options: -debug -no-hs-main -optl-mexec-model=reactor "-optl-Wl,--export=hs_start"
