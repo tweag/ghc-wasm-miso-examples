@@ -12,7 +12,7 @@ executable ghc-wasm-miso-examples
       , hs2048
       , jsaddle
       , jsaddle-wasm
-      , miso
+      , miso >= 1.8.7.0
       , mtl
       , random
       , text
