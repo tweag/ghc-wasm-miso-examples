@@ -150,9 +150,9 @@ step state@GameState {..} =
 
 updateGameState :: Action -> GameState -> Effect GameState Action
 updateGameState Sync state@GameState {..} =
-  noEff state {drawScoreAdd = scoreAdd}
+  put state {drawScoreAdd = scoreAdd}
 updateGameState NewGame state = newGame state <# pure Sync
-updateGameState Continue state = noEff state {gameProgress = Continuing}
+updateGameState Continue state = put state {gameProgress = Continuing}
 updateGameState (GetArrows arr) state = step nState <# pure Sync
   where
     nState = state {direction = toDirection arr}
@@ -168,4 +168,4 @@ updateGameState (TouchEnd (TouchEvent touch)) state =
     -- print x
     pure $ swipe (Touch.client . fromJust . prevTouch $ state) (Touch.client touch)
 updateGameState Init state = state <# pure NewGame
-updateGameState _ state = noEff state
+updateGameState _ state = put state

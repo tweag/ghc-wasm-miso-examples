@@ -152,18 +152,18 @@ viewModel Started{..} =
 updateModel :: Msg -> Model -> Effect Model Msg
 updateModel msg NotStarted =
   case msg of
-       KeyboardPress keys | Set.member 32 keys -> noEff $ Started initSnake Nothing 0
-       _                                       -> noEff NotStarted
+       KeyboardPress keys | Set.member 32 keys -> put $ Started initSnake Nothing 0
+       _                                       -> put NotStarted
 updateModel (ArrowPress arrs) model@Started{..} =
   let newDir = getNewDirection arrs (direction snake)
       newSnake = snake { direction = newDir } in
-  noEff $ model { snake = newSnake }
+  put $ model { snake = newSnake }
 updateModel (Spawn chance (randX, randY)) model@Started{}
   | chance <= 0.1 =
      let newCherry = spawnCherry randX randY in
-     noEff model { cherry = newCherry }
+     put model { cherry = newCherry }
   | otherwise =
-     noEff model
+     put model
 updateModel (Tick _) model@Started{..} =
   let newHead = getNewSegment (shead snake) (direction snake)
       ateCherry = maybe False (isOverlap newHead) cherry
@@ -177,12 +177,12 @@ updateModel (Tick _) model@Started{..} =
       newModel = model { snake = newSnake, cherry = newCherry, score = newScore }
       gameOver = isGameOver newHead newTail
       in
-  if | gameOver          -> noEff NotStarted
+  if | gameOver          -> put NotStarted
      | cherry == Nothing -> newModel <# do
                                         [chance, xPos, yPos] <- replicateM 3 $ randomRIO (0, 1)
                                         return $ Spawn chance (xPos, yPos)
-     | otherwise         -> noEff newModel
-updateModel _ model = noEff model
+     | otherwise         -> put newModel
+updateModel _ model = put model
 
 getNewDirection :: Arrows -> Direction -> Direction
 getNewDirection (Arrows arrX arrY) dir

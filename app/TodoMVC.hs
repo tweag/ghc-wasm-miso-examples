@@ -95,16 +95,16 @@ start = startComponent Component { initialAction = Just NoOp, ..}
     styles     = []
 
 updateModel :: Msg -> Model -> Effect Model Msg
-updateModel NoOp m = noEff m
+updateModel NoOp m = put m
 updateModel (CurrentTime n) m =
   m <# do liftIO (print n) >> pure NoOp
 updateModel Add model@Model{..} =
-  noEff model {
+  put model {
     uid = uid + 1
   , field = mempty
   , entries = entries <> [ newEntry field uid | not $ S.null field ]
   }
-updateModel (UpdateField str) model = noEff model { field = str }
+updateModel (UpdateField str) model = put model { field = str }
 updateModel (EditingEntry id' isEditing) model@Model{..} =
   model { entries = newEntries } <# do
     focus $ S.pack $ "todo-" ++ show id'
@@ -114,17 +114,17 @@ updateModel (EditingEntry id' isEditing) model@Model{..} =
          \t -> t { editing = isEditing, focussed = isEditing }
 
 updateModel (UpdateEntry id' task) model@Model{..} =
-  noEff model { entries = newEntries }
+  put model { entries = newEntries }
     where
       newEntries =
         filterMap entries ((==id') . eid) $ \t ->
            t { description = task }
 
 updateModel (Delete id') model@Model{..} =
-  noEff model { entries = filter (\t -> eid t /= id') entries }
+  put model { entries = filter (\t -> eid t /= id') entries }
 
 updateModel DeleteComplete model@Model{..} =
-  noEff model { entries = filter (not . completed) entries }
+  put model { entries = filter (not . completed) entries }
 
 updateModel (Check id' isCompleted) model@Model{..} =
    model { entries = newEntries } <# eff
@@ -138,14 +138,14 @@ updateModel (Check id' isCompleted) model@Model{..} =
           t { completed = isCompleted }
 
 updateModel (CheckAll isCompleted) model@Model{..} =
-  noEff model { entries = newEntries }
+  put model { entries = newEntries }
     where
       newEntries =
         filterMap entries (const True) $
           \t -> t { completed = isCompleted }
 
 updateModel (ChangeVisibility v) model =
-  noEff model { visibility = v }
+  put model { visibility = v }
 
 filterMap :: [a] -> (a -> Bool) -> (a -> a) -> [a]
 filterMap xs predicate f = go' xs
