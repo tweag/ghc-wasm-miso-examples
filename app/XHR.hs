@@ -1,9 +1,12 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE DataKinds           #-}
 {-# LANGUAGE DeriveGeneric       #-}
 {-# LANGUAGE RecordWildCards     #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeFamilies        #-}
 {-# LANGUAGE TypeOperators       #-}
+
+#ifdef wasi_HOST_OS
 
 module XHR (start) where
 
@@ -148,3 +151,7 @@ getGitHubAPIInfo = do
 -- via ghcjs-dom, servant-jsaddle or servant-client-js.
 foreign import javascript safe "const r = await fetch($1); return r.text();"
   js_fetch :: JSString -> IO JSString
+
+#else
+module XHR () where
+#endif

@@ -11,7 +11,6 @@ executable ghc-wasm-miso-examples
       , ghc-experimental
       , hs2048
       , jsaddle
-      , jsaddle-wasm
       , miso >= 1.8.7.0
       , mtl
       , random
@@ -26,4 +25,5 @@ executable ghc-wasm-miso-examples
       Snake
       TodoMVC
       XHR
-    ghc-options: -no-hs-main -optl-mexec-model=reactor "-optl-Wl,--export=hs_start"
+    if arch(wasm32)
+      ghc-options: -no-hs-main -optl-mexec-model=reactor "-optl-Wl,--export=hs_start"

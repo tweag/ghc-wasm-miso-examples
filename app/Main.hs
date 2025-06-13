@@ -1,10 +1,27 @@
-module MyMain (main) where
+{-# LANGUAGE CPP #-}
+
+#ifdef wasi_HOST_OS
+module MyMain (myMain) where
+#else
+module Main (main) where
+#endif
 
 import App (start)
+import Miso qualified
+
+#ifdef wasi_HOST_OS
 import GHC.Wasm.Prim
-import Language.Javascript.JSaddle.Wasm qualified as JSaddle.Wasm
+#else
+import System.Environment (getArgs)
+#endif
 
-foreign export javascript "hs_start" main :: JSString -> IO ()
-
-main :: JSString -> IO ()
-main e = JSaddle.Wasm.run $ start e
+#ifdef wasi_HOST_OS
+myMain :: JSString -> IO ()
+myMain e = Miso.run $ start $ fromJSString e
+foreign export javascript "hs_start" myMain :: JSString -> IO ()
+#else
+main :: IO ()
+main = getArgs >>= \case
+    [arg] -> Miso.run $ start arg
+    _ -> fail "bad args: specify an example, e.g. 2048"
+#endif
