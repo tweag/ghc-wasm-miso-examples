@@ -3,15 +3,16 @@
 module SimpleCounter (start) where
 
 import Control.Monad.State.Strict
+import Language.Javascript.JSaddle (JSM)
 import Miso
 import Miso.String (ms)
 
 start :: JSM ()
-start = startApp App {..}
+start = startComponent Component {..}
   where
-    initialAction = 0
+    initialAction = Just 0
     model = 0 :: Int
-    update n = fromTransition do
+    update n = do
       modify' (+ n)
     view n =
       div_
@@ -27,6 +28,7 @@ start = startApp App {..}
     subs = []
     mountPoint = Nothing
     logLevel = Off
+    styles = []
 
 -- https://github.com/dmjio/miso/issues/631
 -- but it seems to work fine!
@@ -36,4 +38,4 @@ onClickPreventDefault a =
     (defaultOptions {preventDefault = True})
     "click"
     emptyDecoder
-    (\() -> a)
+    (\() _ -> a)

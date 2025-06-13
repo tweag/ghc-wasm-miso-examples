@@ -10,6 +10,7 @@ import InputModel
 import Miso
 import Miso.String (MisoString, ms)
 import qualified Miso.String as S
+import qualified Miso.Style as CSS
 import Touch
 
 black :: MisoString
@@ -211,7 +212,7 @@ display model =
   where
     preview =
       div_
-        [ style_ . M.fromList $
+        [ CSS.style_
           [("left", "100px"), ("width", "100px"), ("position", "absolute")]
         ]
         [text . S.pack . show $ model]

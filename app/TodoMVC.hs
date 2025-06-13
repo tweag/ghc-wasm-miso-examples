@@ -17,11 +17,12 @@ module TodoMVC (start) where
 
 import           Data.Aeson hiding (Object)
 import           Data.Bool
-import qualified Data.Map as M
 import           GHC.Generics
+import           Language.Javascript.JSaddle (JSM)
 import           Miso
 import           Miso.String (MisoString)
 import qualified Miso.String as S
+import qualified Miso.Style as CSS
 
 import           Control.Monad.IO.Class
 
@@ -82,17 +83,18 @@ data Msg
    deriving Show
 
 start :: JSM ()
-start = startApp App { initialAction = NoOp, ..}
+start = startComponent Component { initialAction = Just NoOp, ..}
   where
     model      = emptyModel
-    update     = updateModel
+    update     = \a -> get >>= updateModel a
     view       = viewModel
     events     = defaultEvents
     mountPoint = Nothing
     subs       = []
     logLevel   = Off
+    styles     = []
 
-updateModel :: Msg -> Model -> Effect Msg Model
+updateModel :: Msg -> Model -> Effect Model Msg
 updateModel NoOp m = noEff m
 updateModel (CurrentTime n) m =
   m <# do liftIO (print n) >> pure NoOp
@@ -171,7 +173,7 @@ viewEntries :: MisoString -> [ Entry ] -> View Msg
 viewEntries visibility entries =
   section_
     [ class_ "main"
-    , style_ $ M.singleton "visibility" cssVisibility
+    , CSS.style_ [("visibility", cssVisibility)]
     ]
     [ input_
         [ class_ "toggle-all"
@@ -201,9 +203,10 @@ viewKeyedEntry :: Entry -> View Msg
 viewKeyedEntry = viewEntry
 
 viewEntry :: Entry -> View Msg
-viewEntry Entry {..} = liKeyed_ (toKey eid)
+viewEntry Entry {..} = li_
     [ class_ $ S.intercalate " " $
        [ "completed" | completed ] <> [ "editing" | editing ]
+    , key_ $ toKey eid
     ]
     [ div_
         [ class_ "view" ]

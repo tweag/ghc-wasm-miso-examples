@@ -11,14 +11,15 @@ module XHR (start) where
 
 import           Control.Monad.IO.Class
 import           Data.Aeson
-import qualified Data.Map               as M
 import           Data.Maybe
 import qualified Data.Text              as T
 import           GHC.Generics
 import           GHC.Wasm.Prim
+import           Language.Javascript.JSaddle (JSM)
 
 import           Miso                   hiding (defaultOptions)
-import           Miso.String
+import           Miso.String hiding (JSString)
+import qualified Miso.Style as CSS
 
 -- | Model
 data Model
@@ -36,20 +37,21 @@ data Action
 -- | Main entry point
 start :: JSM ()
 start = do
-  startApp App { model = Model Nothing
-               , initialAction = NoOp
+  startComponent Component { model = Model Nothing
+               , initialAction = Just NoOp
                , mountPoint = Nothing
                , ..
                }
     where
-      update = updateModel
+      update = \a -> get >>= updateModel a
       events = defaultEvents
       subs   = []
       view   = viewModel
       logLevel = Off
+      styles = []
 
 -- | Update your model
-updateModel :: Action -> Model -> Effect Action Model
+updateModel :: Action -> Model -> Effect Model Action
 updateModel FetchGitHub m = m <# do
   SetGitHub <$> getGitHubAPIInfo
 updateModel (SetGitHub apiInfo) m =
@@ -60,7 +62,7 @@ updateModel NoOp m = noEff m
 viewModel :: Model -> View Action
 viewModel Model {..} = view
   where
-    view = div_ [ style_ $ M.fromList [
+    view = div_ [ CSS.style_ [
                   (pack "text-align", pack "center")
                 , (pack "margin", pack "200px")
                 ]

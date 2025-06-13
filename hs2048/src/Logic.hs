@@ -148,7 +148,7 @@ step state@GameState {..} =
      | direction /= None -> stepSlide state
      | otherwise -> state
 
-updateGameState :: Action -> GameState -> Effect Action GameState
+updateGameState :: Action -> GameState -> Effect GameState Action
 updateGameState Sync state@GameState {..} =
   noEff state {drawScoreAdd = scoreAdd}
 updateGameState NewGame state = newGame state <# pure Sync
@@ -164,8 +164,8 @@ updateGameState (TouchEnd (TouchEvent touch)) state =
   state {prevTouch = Nothing} <# do
     -- putStrLn "Touch did end"
     let (GetArrows x) =
-          swipe (client . fromJust . prevTouch $ state) (client touch)
+          swipe (Touch.client . fromJust . prevTouch $ state) (Touch.client touch)
     -- print x
-    pure $ swipe (client . fromJust . prevTouch $ state) (client touch)
+    pure $ swipe (Touch.client . fromJust . prevTouch $ state) (Touch.client touch)
 updateGameState Init state = state <# pure NewGame
 updateGameState _ state = noEff state

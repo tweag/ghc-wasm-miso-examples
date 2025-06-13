@@ -13,6 +13,7 @@ import System.Random
 
 import GameModel
 import InputModel
+import Language.Javascript.JSaddle (JSM)
 import Logic
 import Rendering
 import Touch
@@ -22,13 +23,14 @@ start :: JSM ()
 start = do
   stdGen <- getStdGen
   let (seed, _) = random stdGen
-  startApp App {model = defaultGame {randomSeed = seed}, ..}
+  startComponent Component {model = defaultGame {randomSeed = seed}, ..}
   where
-    initialAction = Init -- initial action to be executed on application load
+    initialAction = Just Init -- initial action to be executed on application load
     model = defaultGame -- initial model
-    update = updateGameState -- update function
+    update a = get >>= updateGameState a -- update function
     view = display -- view function
     events = union touchEvents defaultEvents -- default delegated events
     mountPoint = Nothing -- defaults to body
     subs = [arrowsSub GetArrows] -- empty subscription list
     logLevel = Off
+    styles = []

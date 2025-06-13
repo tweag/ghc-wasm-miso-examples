@@ -1,6 +1,6 @@
 packages: . hs2048
 
-index-state: 2025-04-03T07:26:54Z
+index-state: 2025-06-09T12:19:05Z
 
 allow-newer:
   all:base
@@ -18,3 +18,8 @@ if arch(wasm32)
 
 package aeson
   flags: -ordered-keymap
+
+source-repository-package
+  type: git
+  location: https://github.com/dmjio/miso
+  tag: da664f2c33344f545d4fd1c9b2f3c6cbf91c9068

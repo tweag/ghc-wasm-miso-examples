@@ -42,13 +42,13 @@ touchDecoder = Decoder {..}
     decoder = parseJSON
 
 onTouchMove :: (TouchEvent -> action) -> Attribute action
-onTouchMove = on "touchmove" touchDecoder
+onTouchMove f = on "touchmove" touchDecoder $ const . f
 
 onTouchStart :: (TouchEvent -> action) -> Attribute action
-onTouchStart = on "touchstart" touchDecoder
+onTouchStart f = on "touchstart" touchDecoder $ const . f
 
 onTouchEnd :: (TouchEvent -> action) -> Attribute action
-onTouchEnd = on "touchend" touchDecoder
+onTouchEnd f = on "touchend" touchDecoder $ const . f
 
 touchEvents :: M.Map MisoString Bool
 touchEvents =

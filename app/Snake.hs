@@ -9,12 +9,13 @@ module Snake (start) where
 import           Control.Concurrent
 import           Control.Monad
 import           Control.Monad.IO.Class
-import qualified Data.Map           as M
 import qualified Data.Set           as Set
+import           Language.Javascript.JSaddle (JSM, askJSM, runJSM)
 import           System.Random
 
 import           Miso
 import           Miso.String        (MisoString, ms)
+import qualified Miso.Style         as CSS
 import           Miso.Svg           hiding (height_, id_, style_, width_)
 
 -- | miso-snake: heavily inspired by elm-snake
@@ -29,15 +30,15 @@ cherryRadius = 7.5
 every :: Int -> (Double -> action) -> Sub action
 every n f sink = void . forkJSM . forever $ do
   liftIO $ threadDelay n
-  liftIO . sink =<< f <$> now
+  sink =<< f <$> now
 
 start :: JSM ()
-start = startApp App {..}
+start = startComponent Component {..}
   where
-    initialAction = NoOp
+    initialAction = Just NoOp
     mountPoint = Nothing
     model  = NotStarted
-    update = updateModel
+    update = \a -> get >>= updateModel a
     view   = viewModel
     events = defaultEvents
     subs   = [ directionSub ([38,87],[40,83],[37,65],[39,68]) ArrowPress -- arrows + WASD
@@ -45,6 +46,7 @@ start = startApp App {..}
              , every 50000 Tick -- 50 ms
              ]
     logLevel = Off
+    styles = []
 
 -- | Model
 data Direction
@@ -105,7 +107,7 @@ rootBase content = div_ [] [ svg_ [ height_ $ px height
 
 
 textStyle :: Attribute a
-textStyle = style_ $ M.fromList [ ("fill", "green")
+textStyle = CSS.style_ [ ("fill", "green")
                                 , ("stroke", "green")
                                 , ("text-anchor", "middle")
                                 ]
@@ -130,7 +132,7 @@ viewModel Started{..} =
                                 , cy_ $ px y
                                 , rx_ $ px cherryRadius
                                 , ry_ $ px cherryRadius
-                                , style_ $ M.fromList [ ("fill", "red")
+                                , CSS.style_ [ ("fill", "red")
                                                       , ("stroke", "black")
                                                       , ("stroke-width", "2")
                                                       ]
@@ -140,14 +142,14 @@ viewModel Started{..} =
                                    , height_ $ px segmentDim
                                    , x_ $ px x
                                    , y_ $ px y
-                                   , style_ $ M.fromList [ ("fill", color)
+                                   , CSS.style_ $ [ ("fill", color)
                                                          , ("stroke", "black")
                                                          , ("stroke-width", "2")
                                                          ]
                                    ] []
 
 -- | Updates model, optionally introduces side effects
-updateModel :: Msg -> Model -> Effect Msg Model
+updateModel :: Msg -> Model -> Effect Model Msg
 updateModel msg NotStarted =
   case msg of
        KeyboardPress keys | Set.member 32 keys -> noEff $ Started initSnake Nothing 0
@@ -224,3 +226,8 @@ isOverlap (snakeX, snakeY) (cherryX, cherryY) =
                  )
       distance = sqrt(xd * xd + yd * yd)
   in distance <= (cherryRadius * 2)
+
+forkJSM :: JSM () -> JSM ThreadId
+forkJSM a = do
+  ctx <- askJSM
+  liftIO (forkIO (runJSM a ctx))
