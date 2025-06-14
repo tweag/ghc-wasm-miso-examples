@@ -148,24 +148,24 @@ step state@GameState {..} =
      | direction /= None -> stepSlide state
      | otherwise -> state
 
-updateGameState :: Action -> GameState -> Effect GameState Action
-updateGameState Sync state@GameState {..} =
-  put state {drawScoreAdd = scoreAdd}
-updateGameState NewGame state = newGame state <# pure Sync
-updateGameState Continue state = put state {gameProgress = Continuing}
-updateGameState (GetArrows arr) state = step nState <# pure Sync
-  where
-    nState = state {direction = toDirection arr}
-updateGameState (TouchStart (TouchEvent touch)) state =
-  state {prevTouch = Just touch} <# do
+updateGameState :: Action -> Effect GameState Action
+updateGameState Sync = modify $ \state@GameState {..} -> state {drawScoreAdd = scoreAdd}
+updateGameState NewGame = modify newGame >> issue Sync
+updateGameState Continue = modify $ \state -> state {gameProgress = Continuing}
+updateGameState (GetArrows arr) = do
+  modify $ \state -> step $ state {direction = toDirection arr}
+  issue Sync
+updateGameState (TouchStart (TouchEvent touch)) = do
+  modify $ \state -> state {prevTouch = Just touch}
     -- putStrLn "Touch did start"
-    pure NoOp
-updateGameState (TouchEnd (TouchEvent touch)) state =
-  state {prevTouch = Nothing} <# do
+  issue NoOp
+updateGameState (TouchEnd (TouchEvent touch)) = do
+  state <- get
+  put state {prevTouch = Nothing}
     -- putStrLn "Touch did end"
-    let (GetArrows x) =
+  let (GetArrows x) =
           swipe (Touch.client . fromJust . prevTouch $ state) (Touch.client touch)
     -- print x
-    pure $ swipe (Touch.client . fromJust . prevTouch $ state) (Touch.client touch)
-updateGameState Init state = state <# pure NewGame
-updateGameState _ state = put state
+  issue $ swipe (Touch.client . fromJust . prevTouch $ state) (Touch.client touch)
+updateGameState Init = issue NewGame
+updateGameState _ = pure ()

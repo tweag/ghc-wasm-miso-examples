@@ -27,7 +27,7 @@ start = do
   where
     initialAction = Just Init -- initial action to be executed on application load
     model = defaultGame -- initial model
-    update a = get >>= updateGameState a -- update function
+    update = updateGameState -- update function
     view = display -- view function
     events = union touchEvents defaultEvents -- default delegated events
     mountPoint = Nothing -- defaults to body

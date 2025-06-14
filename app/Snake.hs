@@ -38,7 +38,7 @@ start = startComponent Component {..}
     initialAction = Just NoOp
     mountPoint = Nothing
     model  = NotStarted
-    update = \a -> get >>= updateModel a
+    update = updateModel
     view   = viewModel
     events = defaultEvents
     subs   = [ directionSub ([38,87],[40,83],[37,65],[39,68]) ArrowPress -- arrows + WASD
@@ -149,22 +149,24 @@ viewModel Started{..} =
                                    ] []
 
 -- | Updates model, optionally introduces side effects
-updateModel :: Msg -> Model -> Effect Model Msg
-updateModel msg NotStarted =
-  case msg of
-       KeyboardPress keys | Set.member 32 keys -> put $ Started initSnake Nothing 0
-       _                                       -> put NotStarted
-updateModel (ArrowPress arrs) model@Started{..} =
+updateModel :: Msg -> Effect Model Msg
+updateModel msg = get >>= \case
+  NotStarted -> case msg of
+    KeyboardPress keys | Set.member 32 keys -> put $ Started initSnake Nothing 0
+    _                                       -> put NotStarted
+  Started{..} -> updateModel' msg snake cherry score
+updateModel' :: Msg -> Snake -> Cherry -> Score -> Effect Model Msg
+updateModel' (ArrowPress arrs) snake cherry score =
   let newDir = getNewDirection arrs (direction snake)
       newSnake = snake { direction = newDir } in
-  put $ model { snake = newSnake }
-updateModel (Spawn chance (randX, randY)) model@Started{}
+  put Started{ snake = newSnake, ..}
+updateModel' (Spawn chance (randX, randY)) snake cherry score
   | chance <= 0.1 =
      let newCherry = spawnCherry randX randY in
-     put model { cherry = newCherry }
+     put Started{ cherry = newCherry, ..}
   | otherwise =
-     put model
-updateModel (Tick _) model@Started{..} =
+     put Started{..}
+updateModel' (Tick _) snake cherry score =
   let newHead = getNewSegment (shead snake) (direction snake)
       ateCherry = maybe False (isOverlap newHead) cherry
       newTail =
@@ -174,7 +176,7 @@ updateModel (Tick _) model@Started{..} =
       (newCherry, newScore) =
         if ateCherry then (Nothing, score + 1)
                      else (cherry, score)
-      newModel = model { snake = newSnake, cherry = newCherry, score = newScore }
+      newModel = Started{ snake = newSnake, cherry = newCherry, score = newScore }
       gameOver = isGameOver newHead newTail
       in
   if | gameOver          -> put NotStarted
@@ -182,7 +184,7 @@ updateModel (Tick _) model@Started{..} =
                                         [chance, xPos, yPos] <- replicateM 3 $ randomRIO (0, 1)
                                         return $ Spawn chance (xPos, yPos)
      | otherwise         -> put newModel
-updateModel _ model = put model
+updateModel' _ snake cherry score = put Started{..}
 
 getNewDirection :: Arrows -> Direction -> Direction
 getNewDirection (Arrows arrX arrY) dir

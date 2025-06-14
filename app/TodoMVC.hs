@@ -86,7 +86,7 @@ start :: JSM ()
 start = startComponent Component { initialAction = Just NoOp, ..}
   where
     model      = emptyModel
-    update     = \a -> get >>= updateModel a
+    update     = updateModel
     view       = viewModel
     events     = defaultEvents
     mountPoint = Nothing
@@ -94,58 +94,61 @@ start = startComponent Component { initialAction = Just NoOp, ..}
     logLevel   = Off
     styles     = []
 
-updateModel :: Msg -> Model -> Effect Model Msg
-updateModel NoOp m = put m
-updateModel (CurrentTime n) m =
-  m <# do liftIO (print n) >> pure NoOp
-updateModel Add model@Model{..} =
-  put model {
+updateModel :: Msg -> Effect Model Msg
+updateModel NoOp = pure ()
+updateModel (CurrentTime n) =
+  io_ (liftIO (print n)) >> issue NoOp
+updateModel Add = modify $ \model@Model{..} ->
+  model {
     uid = uid + 1
   , field = mempty
   , entries = entries <> [ newEntry field uid | not $ S.null field ]
   }
-updateModel (UpdateField str) model = put model { field = str }
-updateModel (EditingEntry id' isEditing) model@Model{..} =
-  model { entries = newEntries } <# do
-    focus $ S.pack $ "todo-" ++ show id'
-    pure NoOp
-    where
+updateModel (UpdateField str) = modify $ \model -> model { field = str }
+updateModel (EditingEntry id' isEditing) = do
+  modify $ \model@Model{..} ->
+    let
       newEntries = filterMap entries (\t -> eid t == id') $
          \t -> t { editing = isEditing, focussed = isEditing }
+    in
+      model { entries = newEntries }
+  io_ $ focus $ S.pack $ "todo-" ++ show id'
+  issue NoOp
 
-updateModel (UpdateEntry id' task) model@Model{..} =
-  put model { entries = newEntries }
-    where
-      newEntries =
-        filterMap entries ((==id') . eid) $ \t ->
-           t { description = task }
+updateModel (UpdateEntry id' task) = modify $ \model@Model{..} ->
+  let
+    newEntries =
+      filterMap entries ((==id') . eid) $ \t ->
+          t { description = task }
+  in
+    model { entries = newEntries }
 
-updateModel (Delete id') model@Model{..} =
-  put model { entries = filter (\t -> eid t /= id') entries }
+updateModel (Delete id') = modify $ \model@Model{..} ->
+  model { entries = filter (\t -> eid t /= id') entries }
 
-updateModel DeleteComplete model@Model{..} =
-  put model { entries = filter (not . completed) entries }
+updateModel DeleteComplete = modify $ \model@Model{..} ->
+  model { entries = filter (not . completed) entries }
 
-updateModel (Check id' isCompleted) model@Model{..} =
-   model { entries = newEntries } <# eff
-    where
-      eff =
-        liftIO (putStrLn "clicked check") >>
-          pure NoOp
-
+updateModel (Check id' isCompleted) = do
+  modify $ \model@Model{..} ->
+    let
       newEntries =
         filterMap entries (\t -> eid t == id') $ \t ->
           t { completed = isCompleted }
+    in
+      model { entries = newEntries }
+  io_ $ liftIO (putStrLn "clicked check")
+  issue NoOp
 
-updateModel (CheckAll isCompleted) model@Model{..} =
-  put model { entries = newEntries }
-    where
+updateModel (CheckAll isCompleted) = modify $ \model@Model{..} ->
+    let
       newEntries =
         filterMap entries (const True) $
           \t -> t { completed = isCompleted }
+    in
+      model { entries = newEntries }
 
-updateModel (ChangeVisibility v) model =
-  put model { visibility = v }
+updateModel (ChangeVisibility v) = modify $ \model -> model { visibility = v }
 
 filterMap :: [a] -> (a -> Bool) -> (a -> a) -> [a]
 filterMap xs predicate f = go' xs
