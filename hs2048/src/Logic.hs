@@ -158,7 +158,6 @@ updateGameState (GetArrows arr) = do
 updateGameState (TouchStart (TouchEvent touch)) = do
   modify $ \state -> state {prevTouch = Just touch}
     -- putStrLn "Touch did start"
-  issue NoOp
 updateGameState (TouchEnd (TouchEvent touch)) = do
   state <- get
   put state {prevTouch = Nothing}
@@ -168,4 +167,3 @@ updateGameState (TouchEnd (TouchEvent touch)) = do
     -- print x
   issue $ swipe (Touch.client . fromJust . prevTouch $ state) (Touch.client touch)
 updateGameState Init = issue NewGame
-updateGameState _ = pure ()

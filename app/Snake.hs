@@ -35,7 +35,7 @@ every n f sink = void . forkJSM . forever $ do
 start :: JSM ()
 start = startComponent Component {..}
   where
-    initialAction = Just NoOp
+    initialAction = Nothing
     mountPoint = Nothing
     model  = NotStarted
     update = updateModel
@@ -87,7 +87,6 @@ data Msg
   | ArrowPress !Arrows
   | KeyboardPress !(Set.Set Int)
   | Spawn !Double !Position
-  | NoOp
 
 -- | Initial Snake
 initSnake :: Snake

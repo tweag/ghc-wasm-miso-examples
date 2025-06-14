@@ -21,7 +21,6 @@ data Action
   | Sync
   | TouchStart TouchEvent
   | TouchEnd TouchEvent
-  | NoOp
 
 toDirection :: Arrows -> Direction
 toDirection arr@Arrows {..} =

@@ -83,7 +83,7 @@ data Msg
    deriving Show
 
 start :: JSM ()
-start = startComponent Component { initialAction = Just NoOp, ..}
+start = startComponent Component { initialAction = Nothing, ..}
   where
     model      = emptyModel
     update     = updateModel
@@ -97,7 +97,7 @@ start = startComponent Component { initialAction = Just NoOp, ..}
 updateModel :: Msg -> Effect Model Msg
 updateModel NoOp = pure ()
 updateModel (CurrentTime n) =
-  io_ (liftIO (print n)) >> issue NoOp
+  io_ $ liftIO (print n)
 updateModel Add = modify $ \model@Model{..} ->
   model {
     uid = uid + 1
@@ -113,7 +113,6 @@ updateModel (EditingEntry id' isEditing) = do
     in
       model { entries = newEntries }
   io_ $ focus $ S.pack $ "todo-" ++ show id'
-  issue NoOp
 
 updateModel (UpdateEntry id' task) = modify $ \model@Model{..} ->
   let
@@ -138,7 +137,6 @@ updateModel (Check id' isCompleted) = do
     in
       model { entries = newEntries }
   io_ $ liftIO (putStrLn "clicked check")
-  issue NoOp
 
 updateModel (CheckAll isCompleted) = modify $ \model@Model{..} ->
     let
